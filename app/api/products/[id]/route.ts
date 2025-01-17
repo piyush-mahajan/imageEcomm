@@ -10,7 +10,7 @@ export async function GET(
     const { id } = await props.params;
     await connectToDatabase();
     const product = await Product.findById(id).lean();
-    
+
     if (!product) {
       return NextResponse.json({ error: "Product not found" }, { status: 404 });
     }
