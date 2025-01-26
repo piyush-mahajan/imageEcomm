@@ -1,110 +1,86 @@
-"use client";
+"use client"
 
-import Link from "next/link";
-import { useSession, signOut } from "next-auth/react";
-import { Home, User } from "lucide-react";
-import { useNotification } from "./Notification";
+import Link from "next/link"
+import { useSession, signOut } from "next-auth/react"
+import { Home, User, ChevronDown } from "lucide-react"
+import { useNotification } from "./Notification"
+import { Button } from "../../components/ui/button"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 
 export default function Header() {
-  const { data: session } = useSession();
-  const { showNotification } = useNotification();
+  const { data: session } = useSession()
+  const { showNotification } = useNotification()
 
   const handleSignOut = async () => {
     try {
-      await signOut();
-      showNotification("Signed out successfully", "success");
+      await signOut()
+      showNotification("Signed out successfully", "success")
     } catch {
-      showNotification("Failed to sign out", "error");
+      showNotification("Failed to sign out", "error")
     }
-  };
+  }
 
   return (
-    <div className="navbar bg-base-300 sticky top-0 z-40">
-      <div className="container mx-auto">
-        <div className="flex-1 px-2 lg:flex-none">
-          <Link
-            href="/"
-            className="btn btn-ghost text-xl gap-2 normal-case font-bold"
-            prefetch={true}
-            onClick={() => showNotification("Welcome to ImageKit Shop", "info")}
-          >
-            <Home className="w-5 h-5" />
-            ImageKit Shop
-          </Link>
-        </div>
-        <div className="flex flex-1 justify-end px-2">
-          <div className="flex items-stretch gap-2">
-            <div className="dropdown dropdown-end">
-              <div
-                tabIndex={0}
-                role="button"
-                className="btn btn-ghost btn-circle"
-              >
-                <User className="w-5 h-5" />
-              </div>
-              <ul
-                tabIndex={0}
-                className="dropdown-content z-[1] shadow-lg bg-base-100 rounded-box w-64 mt-4 py-2"
-              >
-                {session ? (
-                  <>
-                    <li className="px-4 py-1">
-                      <span className="text-sm opacity-70">
-                        {session.user?.email?.split("@")[0]}
-                      </span>
-                    </li>
-                    <div className="divider my-1"></div>
-                    {session.user?.role === "admin" && (
-                      <li>
-                        <Link
-                          href="/admin"
-                          className="px-4 py-2 hover:bg-base-200 block w-full"
-                          onClick={() =>
-                            showNotification(
-                              "Welcome to Admin Dashboard",
-                              "info"
-                            )
-                          }
-                        >
-                          Admin Dashboard
-                        </Link>
-                      </li>
-                    )}
-                    <li>
-                      <Link
-                        href="/orders"
-                        className="px-4 py-2 hover:bg-base-200 block w-full"
-                      >
-                        My Orders
-                      </Link>
-                    </li>
-                    <li>
-                      <button
-                        onClick={handleSignOut}
-                        className="px-4 py-2 text-error hover:bg-base-200 w-full text-left"
-                      >
-                        Sign Out
-                      </button>
-                    </li>
-                  </>
-                ) : (
-                  <li>
-                    <Link
-                      href="/login"
-                      className="px-4 py-2 hover:bg-base-200 block w-full"
-                      onClick={() =>
-                        showNotification("Please sign in to continue", "info")
-                      }
-                    >
-                      Login
+    <header className="sticky top-0 z-40 w-full border-b bg-background">
+      <div className="container flex h-16 items-center justify-between" style={{
+    overflowX: "hidden",
+}}>
+        <Link
+          href="/"
+          className="flex items-center space-x-2 ml-6"
+          prefetch={true}
+          onClick={() => showNotification("Welcome to ImageKit Shop", "info")}
+        >
+          <Home className="h-6 w-6" />
+          <span className="text-xl font-bold">ImageKit Shop</span>
+        </Link>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full mr-6  ">
+              <User className="h-5 w-5" />
+              <ChevronDown className="h-4 w-4 ml-1" />
+              <span className="sr-only">Open user menu</span>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-56">
+            {session ? (
+              <>
+                <DropdownMenuItem disabled>
+                  <span className="text-sm opacity-70">{session.user?.email?.split("@")[0]}</span>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                {session.user?.role === "admin" && (
+                  <DropdownMenuItem asChild>
+                    <Link href="/admin" onClick={() => showNotification("Welcome to Admin Dashboard", "info")}>
+                      Admin Dashboard
                     </Link>
-                  </li>
+                  </DropdownMenuItem>
                 )}
-              </ul>
-            </div>
-          </div>
-        </div>
+                <DropdownMenuItem asChild>
+                  <Link href="/orders">My Orders</Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={handleSignOut} className="text-red-600">
+                  Sign Out
+                </DropdownMenuItem>
+              </>
+            ) : (
+              <DropdownMenuItem asChild>
+                <Link href="/login" onClick={() => showNotification("Please sign in to continue", "info")}>
+                  Login
+                </Link>
+              </DropdownMenuItem>
+            )}
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
-    </div>
-  );
+    </header>
+  )
 }
+
