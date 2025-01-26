@@ -69,8 +69,8 @@ export default function ProductCard({ product }: { product: IProduct }) {
               <span className="text-lg font-bold text-white">From ${lowestPrice.toFixed(2)}</span>
               <span className="text-xs text-neutral-400">{product.variants.length} sizes available</span>
             </div>
-            <Link href={`/products/${product._id}`} className="btn btn-primary btn-sm gap-2">
-              <Eye className="w-4 h-4" />
+            <Link href={`/products/${product._id}`} className="btn btn-primary btn-sm gap-2 text-white">
+              <Eye className="w-4 h-4 text-white"  />
               View Options
             </Link>
           </div>
