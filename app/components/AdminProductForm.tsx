@@ -188,6 +188,7 @@ export default function AdminProductForm() {
       <button
         type="submit"
         className="btn btn-primary btn-block"
+        style={{ backgroundColor: "#000", color: "#fff" }}
         disabled={loading}
       >
         {loading ? (

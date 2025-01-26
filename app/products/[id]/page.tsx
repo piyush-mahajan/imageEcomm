@@ -68,10 +68,10 @@ export default function ProductPage() {
         variant,
       });
 
-      // if (!process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID) {
-      //   showNotification("Razorpay key is missing", "error");
-      //   return;
-      // }
+      if (!process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID) {
+        showNotification("Razorpay key is missing", "error");
+        return;
+      }
 
       const options = {
         key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
