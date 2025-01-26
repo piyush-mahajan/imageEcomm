@@ -1,8 +1,9 @@
 "use client"
+import * as React from "react"
 
 import Link from "next/link"
 import { useSession, signOut } from "next-auth/react"
-import { Home, User, ChevronDown } from "lucide-react"
+import { Home, User, ChevronDown, Moon, Sun } from "lucide-react"
 import { useNotification } from "./Notification"
 import { Button } from "../../components/ui/button"
 import {
@@ -12,8 +13,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { Switch } from "@/components/ui/switch"
+import { Label } from "@/components/ui/label"
 
 export default function Header() {
+  const [isDarkMode, setIsDarkMode] = React.useState(true)
+
   const { data: session } = useSession()
   const { showNotification } = useNotification()
 
@@ -25,6 +30,13 @@ export default function Header() {
       showNotification("Failed to sign out", "error")
     }
   }
+  React.useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.classList.add("dark")
+    } else {
+      document.documentElement.classList.remove("dark")
+    }
+  }, [isDarkMode])
 
   return (
     <header className="sticky top-0 z-40 w-full border-b bg-background">
@@ -40,6 +52,18 @@ export default function Header() {
           <Home className="h-6 w-6" />
           <span className="text-xl font-bold">ImageKit Shop</span>
         </Link>
+        <div className="flex items-center space-x-2">
+              <Sun className="h-4 w-4" />
+              <Switch
+                id="dark-mode"
+                checked={isDarkMode}
+                onCheckedChange={setIsDarkMode}
+              />
+              <Moon className="h-4 w-4" />
+              <Label htmlFor="dark-mode" className="sr-only">
+                Toggle dark mode
+              </Label>
+            </div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full mr-6  ">
